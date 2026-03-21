@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script type="text/javascript">
+        var oneTimeExecution = (function() {
+            var executed = false;
+            return function() {
+                if (!executed) {
+                    var checkExist = setInterval(function() {
+                        if ((document.getElementsByClassName('leaflet-top leaflet-right').length) || (!executed)) {
+                            document.getElementsByClassName('leaflet-top leaflet-right')[0].style.display = "flex"
+                            document.getElementsByClassName('leaflet-top leaflet-right')[0].style.flexDirection = "column"
+                            document.getElementsByClassName('leaflet-top leaflet-right')[0].innerHTML += `
+    <div id='maplegend' class='maplegend'>
+      <div class='legend-title'>Leyenda</div>
+      <div class='legend-scale'>
+        <ul class='legend-labels'>
+        <li><span style='background:dimgrey'></span>Los Estudiantes</li><li><span style='background:brown'></span>Los Dolores</li>
+        </ul>
+      </div>
+    </div>
+    `;
+                            clearInterval(checkExist);
+                            executed = true;
+                        }
+                    }, 100);
+                }
+            };
+        })();
+        oneTimeExecution()
+        </script>
+      
+
+    <style type='text/css'>
+      .maplegend {
+        z-index:9999;
+        float:right;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 5px;
+        border: 2px solid #bbb;
+        padding: 10px;
+        font-size:12px;
+        positon: relative;
+      }
+      .maplegend .legend-title {
+        text-align: left;
+        margin-bottom: 5px;
+        font-weight: bold;
+        font-size: 90%;
+        }
+      .maplegend .legend-scale ul {
+        margin: 0;
+        margin-bottom: 5px;
+        padding: 0;
+        float: left;
+        list-style: none;
+        }
+      .maplegend .legend-scale ul li {
+        font-size: 80%;
+        list-style: none;
+        margin-left: 0;
+        line-height: 18px;
+        margin-bottom: 2px;
+        }
+      .maplegend ul.legend-labels li span {
+        display: block;
+        float: left;
+        height: 16px;
+        width: 30px;
+        margin-right: 5px;
+        margin-left: 0;
+        border: 0px solid #ccc;
+        }
+      .maplegend .legend-source {
+        font-size: 80%;
+        color: #777;
+        clear: both;
+        }
+      .maplegend a {
+        color: #777;
+        }
+    </style>
+    
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_492c37534566e842b17c92e969c36daa {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-ant-path@1.1.2/dist/leaflet-ant-path.min.js"></script>
+</head>
+<body>
+    
+    
+        <title>Semana Santa 2026 en Sanlúcar de Bda - Mapa Interactivo</title>
+        <meta name="description" content="Consulta los itinerarios, horarios y posiciones estimadas de la Semana Santa 2026 en Sanlúcar de Barrameda. Mapa interactivo con hermandades y procesiones.">
+        <script data-goatcounter="https://sssanlucar.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    
+    
+        <div id="sidebar" style="position: fixed; top: 0; left: -300px; width: 300px; height: 100%;
+            background: #800000; color: white; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+            transition: left 0.3s; z-index: 9999; font-family: 'Georgia', serif; overflow-y: auto;">
+            <span class="close-btn" onclick="hideSidebar()" style="cursor: pointer; color: gold; font-size: 24px; float: right;">&times;</span>
+            <h3 id="sidebar-title" style="border-bottom: 2px solid gold; padding-bottom: 5px;">Información</h3>
+            <img id="sidebar-image" src="" width="100%" style="border-radius: 10px; margin-bottom: 10px;">
+            <p><strong>Nombre completo:</strong> <span id="sidebar-nombre-completo"></span></p>
+            <p><strong>Sede Canónica:</strong> <span id="sidebar-sede"></span></p>
+            <p><strong>Año de Fundación:</strong> <span id="sidebar-fundacion"></span></p>
+            <p><strong>Itinerario:</strong> <span id="sidebar-itinerario"></span></p>
+            <p><strong>Distancia:</strong> <span id="sidebar-distancia"></span></p>
+            <p><strong>Horario:</strong></p>
+            <table id="sidebar-horario" style="width: 100%; border-collapse: collapse; text-align: center;">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Cruz de Guía</th>
+                        <th>Último Paso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Salida</td><td id="hora-salida-cg"></td><td id="hora-salida-up"></td></tr>
+                    <tr><td>C/ Cárcel</td><td id="hora-carcel-cg"></td><td id="hora-carcel-up"></td></tr>
+                    <tr><td>Parroquia</td><td id="hora-parroquia-cg"></td><td id="hora-parroquia-up"></td></tr>
+                    <tr><td>C/ Ancha</td><td id="hora-ancha-cg"></td><td id="hora-ancha-up"></td></tr>
+                    <tr><td>Recogida</td><td id="hora-recogida-cg"></td><td id="hora-recogida-up"></td></tr>
+                </tbody>
+            </table>
+            <p> </p>
+            <p><strong>Estrenos:</strong> <span id="sidebar-estrenos"></span></p>
+            <p><strong>Acompañamiento Musical:</strong> <span id="sidebar-bandas"></span></p>
+            <p id="sidebar-descripcion"></p>
+        </div>
+
+        <script>
+            function showSidebar(title, itinerario, horarioData, imagen, nombreCompleto, sede, nombreMostrar, fundacion, estrenos, bandas, colorMenu, colorTexto, distancia) {
+                var sidebar = document.getElementById('sidebar');
+                sidebar.style.left = '0px';
+                sidebar.style.backgroundColor = colorMenu;
+                sidebar.style.color = colorTexto;
+
+                sidebar.querySelectorAll("h3, p, span").forEach(el => {
+                    el.style.color = colorTexto;
+                });
+
+                document.getElementById('sidebar-title').innerText = title;
+                document.getElementById('sidebar-itinerario').innerText = itinerario;
+
+                document.getElementById('sidebar-image').src = imagen;
+                document.getElementById('sidebar-nombre-completo').innerText = nombreCompleto;
+                document.getElementById('sidebar-sede').innerText = sede;
+                document.getElementById('sidebar-title').innerText = nombreMostrar;
+                document.getElementById('sidebar-fundacion').innerText = fundacion;
+                document.getElementById('sidebar-estrenos').innerText = estrenos;
+                document.getElementById('sidebar-bandas').innerText = bandas;
+                document.getElementById('sidebar-distancia').innerText = distancia;
+                
+                    // Rellenar la tabla de horarios
+                // Rellenar la tabla de horarios
+                const horario = JSON.parse(horarioData);
+                
+                document.getElementById('hora-salida-cg').innerText = horario.salida_cg;
+                document.getElementById('hora-salida-up').innerText = horario.salida_up;
+                document.getElementById('hora-carcel-cg').innerText = horario.carcel_cg;
+                document.getElementById('hora-carcel-up').innerText = horario.carcel_up;
+                document.getElementById('hora-parroquia-cg').innerText = horario.parroquia_cg;
+                document.getElementById('hora-parroquia-up').innerText = horario.parroquia_up;
+                document.getElementById('hora-ancha-cg').innerText = horario.ancha_cg;
+                document.getElementById('hora-ancha-up').innerText = horario.ancha_up;
+                document.getElementById('hora-recogida-cg').innerText = horario.recogida_cg;
+                document.getElementById('hora-recogida-up').innerText = horario.recogida_up;
+                            
+            }
+
+            function hideSidebar() {
+                document.getElementById('sidebar').style.left = '-300px';  
+            }
+
+            document.addEventListener('click', function(event) {
+                var sidebar = document.getElementById('sidebar');
+                if (!sidebar.contains(event.target) && !event.target.closest('.leaflet-marker-icon')) {
+                    hideSidebar();
+                }
+            });
+        </script>
+    
+    
+        <div id="menu-dias" style="
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            z-index: 9999;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        ">
+        <select id="selector-dia" onchange="cambiarDia()">
+            <option value="">-Tiempo real-</option>
+            <option value="viernes-dolores">Viernes de Dolores</option>
+            <option value="sabado-pasion">Sábado de Pasión</option>
+            <option value="domingo-ramos">Domingo de Ramos</option>
+            <option value="lunes-santo">Lunes Santo</option>
+            <option value="martes-santo">Martes Santo</option>
+            <option value="miercoles-santo">Miércoles Santo</option>
+            <option value="jueves-santo">Jueves Santo</option>
+            <option value="viernes-santo-manana">Viernes Santo (mañana)</option>
+            <option value="viernes-santo">Viernes Santo</option>
+            <option value="sabado-santo">Sábado Santo</option>
+            <option value="domingo-resurrecion">Domingo de Resurrección</option>
+        </select>
+        </div>
+        <iframe id="mapa-dia" 
+            style="position:absolute; top:0; left:0; width:100%; height:100%; border:none; display:none; z-index:500;">
+        </iframe>
+        <script>
+            function cambiarDia() {
+                const dia = document.getElementById("selector-dia").value;
+                const iframe = document.getElementById("mapa-dia");
+                const mapaPrincipal = document.querySelector(".folium-map");
+            
+                if (dia === "") {
+                    // Volver al mapa en tiempo real
+                    iframe.style.display = "none";
+                    mapaPrincipal.style.display = "block";
+                } else {
+                    // Cargar mapa prerenderizado
+                    iframe.src = dia + ".html";
+                    iframe.style.display = "block";
+                    mapaPrincipal.style.display = "none";
+                }
+            }
+        </script>    
+    
+    
+            <div class="folium-map" id="map_492c37534566e842b17c92e969c36daa" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_492c37534566e842b17c92e969c36daa = L.map(
+                "map_492c37534566e842b17c92e969c36daa",
+                {
+                    center: [36.78449, -6.35364],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 14,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_67dc720e1fb1e210a49899fdfe56e0b5 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "@isidrong_ | ",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_67dc720e1fb1e210a49899fdfe56e0b5.addTo(map_492c37534566e842b17c92e969c36daa);
+        
+    
+            var poly_line_d4d1a72db4597fdc1c2c979343a4e549 = L.polyline(
+                [[36.775241, -6.351945], [36.775304, -6.35203], [36.775044, -6.352385], [36.775136, -6.352479], [36.7748841, -6.3529277], [36.7755061, -6.3532339], [36.7758344, -6.3533955], [36.7757313, -6.353937]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.5, "smoothFactor": 1.0, "stroke": true, "weight": 10}
+            ).addTo(map_492c37534566e842b17c92e969c36daa);
+        
+    
+            poly_line_d4d1a72db4597fdc1c2c979343a4e549.bindTooltip(
+                `<div>
+                     Carrera Oficial - Plaza de la Paz
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_bdabe23c214f93e88bc26470e58605d4 = L.polyline(
+                [[36.7781311, -6.3550307], [36.7785185, -6.3541754], [36.7786106, -6.3539747], [36.778699, -6.3537808], [36.7788533, -6.3534365], [36.7790035, -6.3531013], [36.7792126, -6.3526552], [36.7794446, -6.3521604]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.5, "smoothFactor": 1.0, "stroke": true, "weight": 10}
+            ).addTo(map_492c37534566e842b17c92e969c36daa);
+        
+    
+            poly_line_bdabe23c214f93e88bc26470e58605d4.bindTooltip(
+                `<div>
+                     Carrera Oficial - Calle Ancha
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+    var marker_f9df3500668f6bb760be523e209207cb = L.marker(
+        [36.774971, -6.354674],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_b33a8b039b00bb782971c24ea5ffe38e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_32dfc15702ed72b100990f46ed429f16 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ea453351c944255133e50f7847c330f8 = $(`<div id="html_ea453351c944255133e50f7847c330f8" style="width: 100.0%; height: 100.0%;">Basílica Menor de Nuestra Señora de la Caridad</div>`)[0];
+                popup_32dfc15702ed72b100990f46ed429f16.setContent(html_ea453351c944255133e50f7847c330f8);
+            
+        
+
+        marker_f9df3500668f6bb760be523e209207cb.bindPopup(popup_32dfc15702ed72b100990f46ed429f16)
+        ;
+
+        
+    
+    
+            marker_f9df3500668f6bb760be523e209207cb.bindTooltip(
+                `<div>
+                     B. Caridad
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f9df3500668f6bb760be523e209207cb.setIcon(icon_b33a8b039b00bb782971c24ea5ffe38e);
+            
+    
+    var marker_f8f7c33c4560bc38d9c36e1f7d3f92d4 = L.marker(
+        [36.773927, -6.369182],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_f725cf9fa6fdd5cf0b489d4e26af90e2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d4d5173338564a1964066a972a986001 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f9e244f94dfe5e3951fb4227f7ddf809 = $(`<div id="html_f9e244f94dfe5e3951fb4227f7ddf809" style="width: 100.0%; height: 100.0%;">Capilla Beato Marcelo Spínola</div>`)[0];
+                popup_d4d5173338564a1964066a972a986001.setContent(html_f9e244f94dfe5e3951fb4227f7ddf809);
+            
+        
+
+        marker_f8f7c33c4560bc38d9c36e1f7d3f92d4.bindPopup(popup_d4d5173338564a1964066a972a986001)
+        ;
+
+        
+    
+    
+            marker_f8f7c33c4560bc38d9c36e1f7d3f92d4.bindTooltip(
+                `<div>
+                     C. Beato Marcelo Spínola
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f8f7c33c4560bc38d9c36e1f7d3f92d4.setIcon(icon_f725cf9fa6fdd5cf0b489d4e26af90e2);
+            
+    
+    var marker_c5df7497ad91d86f49e5d61538ef3611 = L.marker(
+        [36.7757172, -6.3494486],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_3d666e1c55985dba4e8a1b52c264cc06 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_775529481281a92ffeb2be97802df033 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_058f9d11373ca3268825b31e0eb8775c = $(`<div id="html_058f9d11373ca3268825b31e0eb8775c" style="width: 100.0%; height: 100.0%;">Capilla Oratorio de Santiago</div>`)[0];
+                popup_775529481281a92ffeb2be97802df033.setContent(html_058f9d11373ca3268825b31e0eb8775c);
+            
+        
+
+        marker_c5df7497ad91d86f49e5d61538ef3611.bindPopup(popup_775529481281a92ffeb2be97802df033)
+        ;
+
+        
+    
+    
+            marker_c5df7497ad91d86f49e5d61538ef3611.bindTooltip(
+                `<div>
+                     C. Oratorio de Santiago
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c5df7497ad91d86f49e5d61538ef3611.setIcon(icon_3d666e1c55985dba4e8a1b52c264cc06);
+            
+    
+    var marker_088810d8ecf6df1c8853b5531f53e798 = L.marker(
+        [36.769495, -6.347748],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_2df2ba6f53d48292fe07f55cb14d7856 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_275da0b04843bd2d7efe49f90b472cec = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4ff4d6f203a6c97aca915992bd7584e0 = $(`<div id="html_4ff4d6f203a6c97aca915992bd7584e0" style="width: 100.0%; height: 100.0%;">Parroquia de Nuestra Señora de los Ángeles y San Sebastián</div>`)[0];
+                popup_275da0b04843bd2d7efe49f90b472cec.setContent(html_4ff4d6f203a6c97aca915992bd7584e0);
+            
+        
+
+        marker_088810d8ecf6df1c8853b5531f53e798.bindPopup(popup_275da0b04843bd2d7efe49f90b472cec)
+        ;
+
+        
+    
+    
+            marker_088810d8ecf6df1c8853b5531f53e798.bindTooltip(
+                `<div>
+                     Ig. Angeles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_088810d8ecf6df1c8853b5531f53e798.setIcon(icon_2df2ba6f53d48292fe07f55cb14d7856);
+            
+    
+    var marker_e993ae50b9dbebb56398f1210946be35 = L.marker(
+        [36.80116, -6.335378],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_082a5462bdbd77583de46400896e41e5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_267518c2a590469fc8b0b685e3f56f05 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cd91967c78a6f6e620cc0dd762715755 = $(`<div id="html_cd91967c78a6f6e620cc0dd762715755" style="width: 100.0%; height: 100.0%;">Parroquia Nuestra Señora del Carmen de Bonanza</div>`)[0];
+                popup_267518c2a590469fc8b0b685e3f56f05.setContent(html_cd91967c78a6f6e620cc0dd762715755);
+            
+        
+
+        marker_e993ae50b9dbebb56398f1210946be35.bindPopup(popup_267518c2a590469fc8b0b685e3f56f05)
+        ;
+
+        
+    
+    
+            marker_e993ae50b9dbebb56398f1210946be35.bindTooltip(
+                `<div>
+                     Ig. Bonanza
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e993ae50b9dbebb56398f1210946be35.setIcon(icon_082a5462bdbd77583de46400896e41e5);
+            
+    
+    var marker_0ffdcab78b59f28de6fe5430c328a837 = L.marker(
+        [36.777156, -6.356538],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_8bf6625c0de99d569fbb08709209c1d9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_006962fe28c566dbf82d931d11005480 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a46fce18fb973dfe68ade2212a3553dd = $(`<div id="html_a46fce18fb973dfe68ade2212a3553dd" style="width: 100.0%; height: 100.0%;">Iglesia de Nuestra Señora del Carmen</div>`)[0];
+                popup_006962fe28c566dbf82d931d11005480.setContent(html_a46fce18fb973dfe68ade2212a3553dd);
+            
+        
+
+        marker_0ffdcab78b59f28de6fe5430c328a837.bindPopup(popup_006962fe28c566dbf82d931d11005480)
+        ;
+
+        
+    
+    
+            marker_0ffdcab78b59f28de6fe5430c328a837.bindTooltip(
+                `<div>
+                     Ig. Carmen
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_0ffdcab78b59f28de6fe5430c328a837.setIcon(icon_8bf6625c0de99d569fbb08709209c1d9);
+            
+    
+    var marker_e6ff109c9cba20c96e608522193adad9 = L.marker(
+        [36.778136, -6.354229],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_2a1398a970de336efe9a215c366e6067 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d0a28a90dcc2af916435618cde1d5b57 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cbaf29a93037bd70764863494b9b8c61 = $(`<div id="html_cbaf29a93037bd70764863494b9b8c61" style="width: 100.0%; height: 100.0%;">Iglesia de Nuestra Señora de los Desamparados</div>`)[0];
+                popup_d0a28a90dcc2af916435618cde1d5b57.setContent(html_cbaf29a93037bd70764863494b9b8c61);
+            
+        
+
+        marker_e6ff109c9cba20c96e608522193adad9.bindPopup(popup_d0a28a90dcc2af916435618cde1d5b57)
+        ;
+
+        
+    
+    
+            marker_e6ff109c9cba20c96e608522193adad9.bindTooltip(
+                `<div>
+                     Ig. Desamparados
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e6ff109c9cba20c96e608522193adad9.setIcon(icon_2a1398a970de336efe9a215c366e6067);
+            
+    
+    var marker_ea3ea2873707e8fee03ebbcd1cbb0d39 = L.marker(
+        [36.777637, -6.349406],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_ac797be31002b76ee250a695ba8fa3fa = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_0762a8194c414ade155e40f73d8a0504 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c750807e6965db8fab614bbcac09530c = $(`<div id="html_c750807e6965db8fab614bbcac09530c" style="width: 100.0%; height: 100.0%;">Iglesia de San Diego de Alcalá</div>`)[0];
+                popup_0762a8194c414ade155e40f73d8a0504.setContent(html_c750807e6965db8fab614bbcac09530c);
+            
+        
+
+        marker_ea3ea2873707e8fee03ebbcd1cbb0d39.bindPopup(popup_0762a8194c414ade155e40f73d8a0504)
+        ;
+
+        
+    
+    
+            marker_ea3ea2873707e8fee03ebbcd1cbb0d39.bindTooltip(
+                `<div>
+                     Ig. San Diego
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ea3ea2873707e8fee03ebbcd1cbb0d39.setIcon(icon_ac797be31002b76ee250a695ba8fa3fa);
+            
+    
+    var marker_1d25b768281f53dc738bc2cde96834d3 = L.marker(
+        [36.782059, -6.348778],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_821f1fed98603b905096fa0ceea2ce81 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d3a339c20e9f106f3ea89ea374a0c1da = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f37eee0844390d624a0e9c49ac8003f0 = $(`<div id="html_f37eee0844390d624a0e9c49ac8003f0" style="width: 100.0%; height: 100.0%;">Iglesia de San Francisco de Asis</div>`)[0];
+                popup_d3a339c20e9f106f3ea89ea374a0c1da.setContent(html_f37eee0844390d624a0e9c49ac8003f0);
+            
+        
+
+        marker_1d25b768281f53dc738bc2cde96834d3.bindPopup(popup_d3a339c20e9f106f3ea89ea374a0c1da)
+        ;
+
+        
+    
+    
+            marker_1d25b768281f53dc738bc2cde96834d3.bindTooltip(
+                `<div>
+                     Ig. San Francisco
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_1d25b768281f53dc738bc2cde96834d3.setIcon(icon_821f1fed98603b905096fa0ceea2ce81);
+            
+    
+    var marker_40000c7228f1bcacd95e4e87e66df249 = L.marker(
+        [36.773928, -6.352602],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_c5b752ca086bb22b2ccf2828b83fca0c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8ba92c149c1b95dabed5726cb2743096 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3472ab938560fcfda89c15f139da615b = $(`<div id="html_3472ab938560fcfda89c15f139da615b" style="width: 100.0%; height: 100.0%;">Iglesia de San Miguel Arcángel</div>`)[0];
+                popup_8ba92c149c1b95dabed5726cb2743096.setContent(html_3472ab938560fcfda89c15f139da615b);
+            
+        
+
+        marker_40000c7228f1bcacd95e4e87e66df249.bindPopup(popup_8ba92c149c1b95dabed5726cb2743096)
+        ;
+
+        
+    
+    
+            marker_40000c7228f1bcacd95e4e87e66df249.bindTooltip(
+                `<div>
+                     Ig. San Miguel
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_40000c7228f1bcacd95e4e87e66df249.setIcon(icon_c5b752ca086bb22b2ccf2828b83fca0c);
+            
+    
+    var marker_80f157ea7232600c89937f73f133c23c = L.marker(
+        [36.781693, -6.348335],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_7cd12864ea640f9650b15b477ba38c4e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d1903de934361d8179001110940748e8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_efd460a542d1b59e13acfb50501d6c49 = $(`<div id="html_efd460a542d1b59e13acfb50501d6c49" style="width: 100.0%; height: 100.0%;">Parroquia de San Nicolás de Bari</div>`)[0];
+                popup_d1903de934361d8179001110940748e8.setContent(html_efd460a542d1b59e13acfb50501d6c49);
+            
+        
+
+        marker_80f157ea7232600c89937f73f133c23c.bindPopup(popup_d1903de934361d8179001110940748e8)
+        ;
+
+        
+    
+    
+            marker_80f157ea7232600c89937f73f133c23c.bindTooltip(
+                `<div>
+                     Ig. San Nicolas
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_80f157ea7232600c89937f73f133c23c.setIcon(icon_7cd12864ea640f9650b15b477ba38c4e);
+            
+    
+    var marker_3515124622da65092f42984edb74fad9 = L.marker(
+        [36.780682, -6.35039],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_55d735d899b82761915493832fd8dd52 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_840cb67914bbeff96bb630d8de412de0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_377496e46da6deb2c9b47206c3ce7c82 = $(`<div id="html_377496e46da6deb2c9b47206c3ce7c82" style="width: 100.0%; height: 100.0%;">Parroquia de Santo Domingo</div>`)[0];
+                popup_840cb67914bbeff96bb630d8de412de0.setContent(html_377496e46da6deb2c9b47206c3ce7c82);
+            
+        
+
+        marker_3515124622da65092f42984edb74fad9.bindPopup(popup_840cb67914bbeff96bb630d8de412de0)
+        ;
+
+        
+    
+    
+            marker_3515124622da65092f42984edb74fad9.bindTooltip(
+                `<div>
+                     Ig. Santo Domingo
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_3515124622da65092f42984edb74fad9.setIcon(icon_55d735d899b82761915493832fd8dd52);
+            
+    
+    var marker_85776a2d44ea5ebac8a63869ea029ea6 = L.marker(
+        [36.77799, -6.35366],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_57ad62bd712e43ca06e9375f05c23a95 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d2e91aa5967fc621db9d16546ac57949 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_078d0ee723fe2eb1c5596dab962d8945 = $(`<div id="html_078d0ee723fe2eb1c5596dab962d8945" style="width: 100.0%; height: 100.0%;">Iglesia de la Santísima Trinidad</div>`)[0];
+                popup_d2e91aa5967fc621db9d16546ac57949.setContent(html_078d0ee723fe2eb1c5596dab962d8945);
+            
+        
+
+        marker_85776a2d44ea5ebac8a63869ea029ea6.bindPopup(popup_d2e91aa5967fc621db9d16546ac57949)
+        ;
+
+        
+    
+    
+            marker_85776a2d44ea5ebac8a63869ea029ea6.bindTooltip(
+                `<div>
+                     Ig. Trinidad
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_85776a2d44ea5ebac8a63869ea029ea6.setIcon(icon_57ad62bd712e43ca06e9375f05c23a95);
+            
+    
+    var marker_88f652f3714e6b0430d9d74e649bb82f = L.marker(
+        [36.776082, -6.353139],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_7e78c021a506f0df47b8457f935d6aed = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8b71b2795918401a2ed57819e93ec1ef = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2e74b085d2d2d7041d68920ae9d58991 = $(`<div id="html_2e74b085d2d2d7041d68920ae9d58991" style="width: 100.0%; height: 100.0%;">Parroquia Matriz de Nuestra Señora de la O</div>`)[0];
+                popup_8b71b2795918401a2ed57819e93ec1ef.setContent(html_2e74b085d2d2d7041d68920ae9d58991);
+            
+        
+
+        marker_88f652f3714e6b0430d9d74e649bb82f.bindPopup(popup_8b71b2795918401a2ed57819e93ec1ef)
+        ;
+
+        
+    
+    
+            marker_88f652f3714e6b0430d9d74e649bb82f.bindTooltip(
+                `<div>
+                     P. de la O
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_88f652f3714e6b0430d9d74e649bb82f.setIcon(icon_7e78c021a506f0df47b8457f935d6aed);
+            
+    
+    var marker_5d771572616fd2315625d9517a0d6871 = L.marker(
+        [36.767531, -6.355591],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_2f385bbcef2e5ca6ed9e8509a4d50d66 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_0e893966dd115bec5d450aa28dcd9f57 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c03961a03cc01994dfab2490a752884f = $(`<div id="html_c03961a03cc01994dfab2490a752884f" style="width: 100.0%; height: 100.0%;">Parroquia de Santa Angela de la Cruz y San Antonio Abad</div>`)[0];
+                popup_0e893966dd115bec5d450aa28dcd9f57.setContent(html_c03961a03cc01994dfab2490a752884f);
+            
+        
+
+        marker_5d771572616fd2315625d9517a0d6871.bindPopup(popup_0e893966dd115bec5d450aa28dcd9f57)
+        ;
+
+        
+    
+    
+            marker_5d771572616fd2315625d9517a0d6871.bindTooltip(
+                `<div>
+                     P. Santa Ángela
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_5d771572616fd2315625d9517a0d6871.setIcon(icon_2f385bbcef2e5ca6ed9e8509a4d50d66);
+            
+    
+    var marker_d3d061b6b8f5b8d14fd76676ff8a81c9 = L.marker(
+        [36.785673, -6.349531],
+        {}
+    ).addTo(map_492c37534566e842b17c92e969c36daa).on('click', function(e) {
+        var horarioData = "{\"salida_cg\": \"\", \"salida_up\": \"\", \"carcel_cg\": \"\", \"carcel_up\": \"\", \"parroquia_cg\": \"\", \"parroquia_up\": \"\", \"ancha_cg\": \"\", \"ancha_up\": \"\", \"recogida_cg\": \"\", \"recogida_up\": \"\"}";  // Genera un objeto nuevo por marcador
+
+        showSidebar(
+            "",
+            "",
+            horarioData,  // Se pasa solo a este marcador
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        );
+    });
+    
+            var icon_167569d03ce06cf528f4505abe878d0a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "church",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_fb19ed05b34034d8cc50e37257cd0f90 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1a7ba53358ee22d9f3b7f2a3eab74b93 = $(`<div id="html_1a7ba53358ee22d9f3b7f2a3eab74b93" style="width: 100.0%; height: 100.0%;">Capilla de la Salud</div>`)[0];
+                popup_fb19ed05b34034d8cc50e37257cd0f90.setContent(html_1a7ba53358ee22d9f3b7f2a3eab74b93);
+            
+        
+
+        marker_d3d061b6b8f5b8d14fd76676ff8a81c9.bindPopup(popup_fb19ed05b34034d8cc50e37257cd0f90)
+        ;
+
+        
+    
+    
+            marker_d3d061b6b8f5b8d14fd76676ff8a81c9.bindTooltip(
+                `<div>
+                     C. de la Salud
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_d3d061b6b8f5b8d14fd76676ff8a81c9.setIcon(icon_167569d03ce06cf528f4505abe878d0a);
+            
+    
+            ant_path_f2ce98b37cd52b38b49038a6f35b9aa8 = L.polyline.antPath(
+              [[36.780499, -6.350611], [36.780499, -6.350611], [36.780381, -6.350672], [36.7802278, -6.3506742], [36.7805116, -6.3503158], [36.7806827, -6.3500998], [36.7810906, -6.3495631], [36.7816241, -6.34888], [36.781813, -6.349089], [36.78188, -6.348992], [36.78188, -6.348992], [36.7828266, -6.3500523], [36.7828266, -6.3500523], [36.7818857, -6.3511078], [36.7812204, -6.3518869], [36.7809071, -6.352253], [36.7809071, -6.352253], [36.7806114, -6.3519727], [36.7805352, -6.3519004], [36.7802263, -6.3516076], [36.7798467, -6.3512478], [36.7792456, -6.3508424], [36.7787891, -6.3506175], [36.7785081, -6.3504791], [36.7782338, -6.3503583], [36.7779073, -6.3502564], [36.7776717, -6.3501363], [36.777619, -6.3503946], [36.7771909, -6.3511591], [36.7771172, -6.3511661], [36.7765055, -6.3509104], [36.7764852, -6.3509874], [36.7764721, -6.351037], [36.7763111, -6.3515632], [36.7762952, -6.3516121], [36.7761596, -6.3520276], [36.7760024, -6.3526451], [36.7754392, -6.3520244], [36.7753007, -6.3518696], [36.775241, -6.351945], [36.775241, -6.351945], [36.775304, -6.35203], [36.775044, -6.352385], [36.775136, -6.352479], [36.7748841, -6.3529277], [36.7755061, -6.3532339], [36.7758344, -6.3533955], [36.775879, -6.3532], [36.775918, -6.35321], [36.77589, -6.353338], [36.776001, -6.353385], [36.77618, -6.353465], [36.77618, -6.353465], [36.776168, -6.35352], [36.776115, -6.353529], [36.7758344, -6.3533955], [36.7757313, -6.353937], [36.776311, -6.3543608], [36.7765609, -6.354482], [36.7766143, -6.3544828], [36.7766379, -6.3544317], [36.7766323, -6.354047], [36.7766754, -6.3538454], [36.7767722, -6.3538388], [36.7771635, -6.3538764], [36.7778126, -6.3539588], [36.7776896, -6.3543294], [36.7775486, -6.3547498], [36.7781311, -6.3550307], [36.7781311, -6.3550307], [36.7785185, -6.3541754], [36.7786106, -6.3539747], [36.778699, -6.3537808], [36.7788533, -6.3534365], [36.7790035, -6.3531013], [36.7792126, -6.3526552], [36.7794446, -6.3521604], [36.7797154, -6.3524024], [36.7800707, -6.3527199], [36.7803234, -6.3529458], [36.7806523, -6.3525554], [36.7809071, -6.352253], [36.7812204, -6.3518869], [36.780925, -6.351553], [36.7805682, -6.3511102], [36.7802278, -6.3506742], [36.780381, -6.350672], [36.780499, -6.350611], [36.780499, -6.350611]],
+              {
+  "stroke": true,
+  "color": "dimgrey",
+  "weight": 6,
+  "opacity": 0.5,
+  "lineCap": "round",
+  "lineJoin": "round",
+  "dashArray": [
+10,
+20,
+],
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "dimgrey",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "bubblingMouseEvents": true,
+  "smoothFactor": 1.0,
+  "noClip": false,
+  "paused": false,
+  "reverse": false,
+  "hardwareAcceleration": false,
+  "delay": 10000,
+  "pulseColor": "#FFFFFF",
+}
+        ).addTo(map_492c37534566e842b17c92e969c36daa);
+        
+    
+            ant_path_f2ce98b37cd52b38b49038a6f35b9aa8.bindTooltip(
+                `<div>
+                     ESTUDIANTES
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            ant_path_4c05aa9dbd9e0c95e74633492c6f6a75 = L.polyline.antPath(
+              [[36.777889, -6.353645], [36.777852, -6.353641], [36.777852, -6.353641], [36.7778479, -6.3537891], [36.7778479, -6.3537891], [36.7778126, -6.3539588], [36.7776896, -6.3543294], [36.7775486, -6.3547498], [36.7774452, -6.3547835], [36.7773758, -6.354924], [36.7773216, -6.3550311], [36.7772755, -6.3551206], [36.7771375, -6.3553889], [36.7768386, -6.3560226], [36.776652, -6.3563562], [36.7764094, -6.3567616], [36.7764094, -6.3567616], [36.776119, -6.3565656], [36.7755305, -6.3559176], [36.7752897, -6.3557041], [36.7749809, -6.3554906], [36.7746412, -6.3553051], [36.7746412, -6.3553051], [36.7747878, -6.3548912], [36.7748046, -6.3547949], [36.7748005, -6.3547386], [36.7747927, -6.3546787], [36.7747675, -6.35466], [36.7744172, -6.3543993], [36.7741174, -6.3541762], [36.7737598, -6.3539101], [36.7739585, -6.3531854], [36.774066, -6.3528045], [36.7741559, -6.3525929], [36.7741559, -6.3525929], [36.774475, -6.3528619], [36.7748389, -6.3523325], [36.7750765, -6.3521555], [36.775241, -6.351945], [36.775304, -6.35203], [36.775044, -6.352385], [36.775136, -6.352479], [36.7748841, -6.3529277], [36.7755061, -6.3532339], [36.7758344, -6.3533955], [36.775879, -6.3532], [36.775918, -6.35321], [36.77589, -6.353338], [36.776001, -6.353385], [36.77618, -6.353465], [36.77618, -6.353465], [36.776168, -6.35352], [36.776115, -6.353529], [36.7758344, -6.3533955], [36.7757313, -6.353937], [36.776311, -6.3543608], [36.7765609, -6.354482], [36.7766143, -6.3544828], [36.7766379, -6.3544317], [36.7766323, -6.354047], [36.7766754, -6.3538454], [36.7767722, -6.3538388], [36.7771635, -6.3538764], [36.7778126, -6.3539588], [36.7776896, -6.3543294], [36.7775486, -6.3547498], [36.7781311, -6.3550307], [36.7781311, -6.3550307], [36.7785185, -6.3541754], [36.7786106, -6.3539747], [36.778699, -6.3537808], [36.7788533, -6.3534365], [36.7790035, -6.3531013], [36.7792126, -6.3526552], [36.7794446, -6.3521604], [36.7796377, -6.3517518], [36.7796446, -6.3517066], [36.7796527, -6.3516628], [36.7798467, -6.3512478], [36.7792456, -6.3508424], [36.7790154, -6.3512767], [36.7787838, -6.3515811], [36.7783614, -6.3510607], [36.7780699, -6.3514538], [36.7778807, -6.3518155], [36.7777242, -6.352341], [36.7776756, -6.3525956], [36.7775402, -6.3529609], [36.7774942, -6.3530472], [36.7773167, -6.3536072], [36.7778455, -6.3537194], [36.777852, -6.353641], [36.777852, -6.353641], [36.777889, -6.353645]],
+              {
+  "stroke": true,
+  "color": "brown",
+  "weight": 6,
+  "opacity": 0.5,
+  "lineCap": "round",
+  "lineJoin": "round",
+  "dashArray": [
+10,
+20,
+],
+  "dashOffset": null,
+  "fill": false,
+  "fillColor": "brown",
+  "fillOpacity": 0.2,
+  "fillRule": "evenodd",
+  "bubblingMouseEvents": true,
+  "smoothFactor": 1.0,
+  "noClip": false,
+  "paused": false,
+  "reverse": false,
+  "hardwareAcceleration": false,
+  "delay": 10000,
+  "pulseColor": "#FFFFFF",
+}
+        ).addTo(map_492c37534566e842b17c92e969c36daa);
+        
+    
+            ant_path_4c05aa9dbd9e0c95e74633492c6f6a75.bindTooltip(
+                `<div>
+                     DOLORES
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            map_492c37534566e842b17c92e969c36daa.fitBounds(
+                [[]],
+                {}
+            );
+        
+</script>
+</html>
